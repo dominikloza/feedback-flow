@@ -36,3 +36,51 @@ export async function createFeedback(formData: FormData) {
 
     return { success: true }
 }
+
+export async function toggleVote(feedbackId: string) {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+        return { error: 'Tylko zalogowani użytkownicy mogą głosować.' }
+    }
+
+    const { data, error } = await supabase
+        .from('votes')
+        .select('*')
+        .eq('feedback_id', feedbackId)
+        .eq('user_id', user.id)
+        .single()
+
+    if (error && error.code !== 'PGRST116') {
+        console.error('Error checking vote:', error)
+        return { error: 'Wystąpił błąd podczas sprawdzania głosu.' }
+    }
+
+    if (data) {
+        const { error: deleteError } = await supabase
+            .from('votes')
+            .delete()
+            .eq('id', data.id)
+
+        if (deleteError) {
+            console.error('Error deleting vote:', deleteError)
+            return { error: 'Wystąpił błąd podczas usuwania głosu.' }
+        }
+    } else {
+        const { error: insertError } = await supabase
+            .from('votes')
+            .insert({
+                feedback_id: feedbackId,
+                user_id: user.id
+            })
+
+        if (insertError) {
+            console.error('Error inserting vote:', insertError)
+            return { error: 'Wystąpił błąd podczas dodawania głosu.' }
+        }
+    }
+
+    revalidatePath('/')
+    return { success: true }
+}
