@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/input-group"
 import { feedbackFormSchema } from "../schema"
 import { createFeedback } from "../actions"
+import { toast } from "sonner"
 
 
 export function FeedbackForm() {
@@ -47,7 +48,7 @@ export function FeedbackForm() {
         formData.append('description', values.description)
         const response = await createFeedback(formData)
         if (response.error) {
-            console.error(response.error)
+            toast.error(response.error)
         } else {
             form.reset()
         }

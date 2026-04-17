@@ -1,6 +1,5 @@
 import React from 'react'
 import { getFeedbackList } from '@/features/feedback/queries'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { InboxIcon } from 'lucide-react'
 import { FeedbackForm } from '@/features/feedback/components/feedback-form'
 import { FeedbackCard } from '@/features/feedback/components/feedback-card'

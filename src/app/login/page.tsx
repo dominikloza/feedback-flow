@@ -22,7 +22,7 @@ export default async function LoginPage({
         <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 p-4">
             <Card className="w-full max-w-sm shadow-sm ring-1 ring-zinc-200">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold tracking-tight">System dostępu</CardTitle>
+                    <CardTitle className="text-2xl font-bold tracking-tight">Logowanie</CardTitle>
                     <CardDescription>
                         Użyj formularza, aby zalogować się do platformy FeedbackFlow. Brak konta automatycznie wywoła rejejestrację.
                     </CardDescription>

@@ -83,18 +83,21 @@ export type Database = {
                     full_name: string | null
                     id: string
                     updated_at: string | null
+                    is_admin: boolean | null
                 }
                 Insert: {
                     avatar_url?: string | null
                     full_name?: string | null
                     id: string
                     updated_at?: string | null
+                    is_admin: boolean | null
                 }
                 Update: {
                     avatar_url?: string | null
                     full_name?: string | null
                     id?: string
                     updated_at?: string | null
+                    is_admin: boolean | null
                 }
                 Relationships: []
             }

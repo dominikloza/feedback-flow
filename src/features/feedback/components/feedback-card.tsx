@@ -5,7 +5,8 @@ import { FeedbackWithProfile } from "../queries"
 import { useOptimistic, startTransition } from 'react'
 import { toggleVote } from '../actions'
 import { Button } from '@/components/ui/button'
-import { ArrowBigUp, Heart } from 'lucide-react'
+import { Heart } from 'lucide-react'
+import { toast } from 'sonner'
 
 
 export function FeedbackCard({ feedback }: { feedback: FeedbackWithProfile }) {
@@ -17,11 +18,14 @@ export function FeedbackCard({ feedback }: { feedback: FeedbackWithProfile }) {
         })
     )
 
-    const handleVote = () => {
+    const handleVote = async () => {
         startTransition(() => {
             addOptimisticVote(!optimisticVotes.hasVoted)
         })
-        toggleVote(feedback.id)
+        const response = await toggleVote(feedback.id)
+        if (response.error) {
+            toast.error(response.error)
+        }
     }
 
 
