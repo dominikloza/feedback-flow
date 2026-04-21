@@ -31,12 +31,12 @@ export default async function LoginPage({
                     <form className="flex flex-col gap-5">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="email" className="text-sm font-medium leading-none">Adres E-mail</label>
-                            <Input id="email" name="email" type="email" placeholder="mid.developer@gmail.com" required />
+                            <Input id="email" name="email" type="email" placeholder="mid.developer@gmail.com" required autoComplete="email" aria-label="Adres E-mail" />
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <label htmlFor="password" className="text-sm font-medium leading-none">Hasło</label>
-                            <Input id="password" name="password" type="password" required />
+                            <Input id="password" name="password" type="password" required autoComplete="password" aria-label="Hasło" />
                         </div>
 
                         {displayMessage && (
