@@ -5,6 +5,7 @@ export type FeedbackWithProfile = Database['public']['Tables']['feedback']['Row'
     profiles: { full_name: string | null; avatar_url: string | null } | null
     upvotesCount: number
     userHasVoted: boolean
+    owner: boolean
 }
 
 export async function getFeedbackList() {
@@ -31,6 +32,7 @@ export async function getFeedbackList() {
         profiles: Array.isArray(item.profiles) ? item.profiles[0] : item.profiles,
         upvotesCount: item.votes?.length || 0,
         userHasVoted: userId ? item.votes?.some((vote: any) => vote.user_id === userId) : false,
+        owner: item.user_id === userId,
     }))
 
     return formattedData

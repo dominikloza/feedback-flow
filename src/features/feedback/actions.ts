@@ -84,3 +84,29 @@ export async function toggleVote(feedbackId: string) {
     revalidatePath('/')
     return { success: true }
 }
+
+export async function deleteFeedback(feedbackId: string) {
+    const supabase = await createClient()
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+        return { error: 'Tylko zalogowani użytkownicy mogą usuwać opinie.' }
+    }
+    if (!feedbackId) {
+        return { error: 'Podaj id opinii.' }
+    }
+
+    const { error } = await supabase
+        .from('feedback')
+        .delete()
+        .eq('id', feedbackId)
+        .eq('user_id', user.id)
+
+    if (error) {
+        console.error('Error deleting feedback:', error)
+        return { error: 'Wystąpił błąd podczas usuwania opinii.' }
+    }
+
+    revalidatePath('/')
+    return { success: true }
+}

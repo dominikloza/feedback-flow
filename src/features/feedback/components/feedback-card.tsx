@@ -3,11 +3,21 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FeedbackWithProfile } from "../queries"
 import { useOptimistic, startTransition } from 'react'
-import { toggleVote } from '../actions'
+import { deleteFeedback, toggleVote } from '../actions'
 import { Button } from '@/components/ui/button'
-import { Heart } from 'lucide-react'
+import { Heart, Trash } from 'lucide-react'
 import { toast } from 'sonner'
-
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export function FeedbackCard({ feedback }: { feedback: FeedbackWithProfile }) {
     const [optimisticVotes, addOptimisticVote] = useOptimistic(
@@ -37,6 +47,15 @@ export function FeedbackCard({ feedback }: { feedback: FeedbackWithProfile }) {
 
     const currentBadgeStyle = statusColors[feedback.status] || statusColors['idea']
 
+    const handleDelete = async () => {
+        const response = await deleteFeedback(feedback.id)
+        if (response?.error) {
+            toast.error(response.error)
+        } else {
+            toast.success("Usunięto pomysł")
+        }
+    }
+
     return (
         <Card key={feedback.id} className="transition-all hover:shadow-md hover:border-zinc-500 border-zinc-200 ">
             <CardHeader className="pb-3">
@@ -49,7 +68,7 @@ export function FeedbackCard({ feedback }: { feedback: FeedbackWithProfile }) {
             <CardContent>
                 <p className="text-zinc-600 leading-relaxed">{feedback.description}</p>
             </CardContent>
-            <CardFooter className="flex items-center justify-end">
+            <CardFooter className="flex items-center justify-end gap-2">
                 <Button
                     variant={optimisticVotes.hasVoted ? "default" : "outline"}
                     onClick={handleVote}
@@ -58,6 +77,39 @@ export function FeedbackCard({ feedback }: { feedback: FeedbackWithProfile }) {
                     <Heart className="w-4 h-4" />
                     {optimisticVotes.count}
                 </Button>
+
+                {feedback.owner && (
+                    <AlertDialog>
+                        <AlertDialogTrigger
+                            render={
+                                <Button
+                                    variant="outline"
+                                    className="flex items-center gap-2 hover:cursor-pointer hover:bg-red-500 hover:text-white"
+                                />
+                            }
+                        >
+                            <Trash className="w-4 h-4" />
+                            Usuń
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Czy na pewno chcesz usunąć ten pomysł?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Tej operacji nie można cofnąć. Pomysł zostanie trwale usunięty z naszej bazy danych.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Anuluj</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={handleDelete}
+                                    className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                                >
+                                    Usuń mimo to
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                )}
             </CardFooter>
         </Card>
     )
