@@ -60,7 +60,20 @@ export function FeedbackCard({ feedback }: { feedback: FeedbackWithProfile }) {
         <Card key={feedback.id} className="transition-all hover:shadow-md hover:border-zinc-500 border-zinc-200 ">
             <CardHeader className="pb-3">
                 <CardTitle className="text-xl">{feedback.title}</CardTitle>
-                <CardDescription>Wnioskodawca: <span className="font-medium text-zinc-900">{feedback.profiles?.full_name || 'Użytkownik FeedbackFlow'}</span></CardDescription>
+                <CardDescription className="flex items-center gap-2 mt-1">
+                    {feedback.profiles?.avatar_url ? (
+                        <img
+                            src={feedback.profiles.avatar_url}
+                            alt={feedback.profiles.full_name || 'Avatar'}
+                            className="w-6 h-6 rounded-full border border-zinc-200"
+                        />
+                    ) : (
+                        <div className="w-6 h-6 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-[10px] font-bold">
+                            {feedback.profiles?.full_name?.substring(0, 2).toUpperCase() || 'FF'}
+                        </div>
+                    )}
+                    <span>Wnioskodawca: <span className="font-medium text-zinc-900">{feedback.profiles?.full_name || 'Użytkownik FeedbackFlow'}</span></span>
+                </CardDescription>
                 <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border whitespace-nowrap uppercase tracking-wider w-fit ${currentBadgeStyle}`}>
                     {feedback.status}
                 </span>
